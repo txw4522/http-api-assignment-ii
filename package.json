@@ -1,0 +1,30 @@
+{
+  "name": "http-api-assignment-ii",
+  "version": "1.0.0",
+  "engines": {
+    "node": "12.13.0",
+    "npm": "7.5.2"
+  },
+  "description": "HTTP API Assignment 2",
+  "main": "./src/server.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"Tests complete\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/txw4522/http-api-assignment-ii.git"
+  },
+  "author": "TONY WENG",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/txw4522/http-api-assignment-ii/issues"
+  },
+  "homepage": "https://github.com/txw4522/http-api-assignment-ii#readme",
+  "devDependencies": {
+    "eslint": "^7.21.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.22.1"
+  }
+}
