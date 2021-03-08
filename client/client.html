@@ -6,11 +6,13 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
-const parseJSON = (xhr, content) => {
-      const obj = JSON.parse(xhr.response);
-      console.dir(obj)
+  //parses json into viewable text
+  //will be changed to handle card creation according to tasks added
+    const parseJSON = (xhr, content) => {
       if(xhr.response && xhr.getResponseHeader('Content-Type') === 'application/json'){
         //if there is a message print it
+        const obj = JSON.parse(xhr.response);
+        console.dir(obj)
         if(obj.message) {
           content.innerHTML += `<p>Message: ${obj.message}</p>`;
         }
@@ -22,6 +24,7 @@ const parseJSON = (xhr, content) => {
       }
     };
 
+    //switch handling each response code
     const handleResponse = (xhr) => {
       const content = document.querySelector('#content');
       
@@ -49,29 +52,30 @@ const parseJSON = (xhr, content) => {
       parseJSON(xhr, content);
     };
 
-    const sendPost = (e, nameForm) => {
+    //posts data
+    const sendPost = (e, taskForm) => {
       e.preventDefault();
 
-      const nameAction = nameForm.getAttribute('action');
-      const nameMethod = nameForm.getAttribute('method');
+      const taskAction = taskForm.getAttribute('action');
+      const taskMethod = taskForm.getAttribute('method');
 
-      const nameField = nameForm.querySelector('#nameField');
-      const ageField = nameForm.querySelector('#ageField');
+      const taskField = taskForm.querySelector('#taskField');
+      const ageField = taskForm.querySelector('#descriptionField');
 
       const xhr = new XMLHttpRequest();
-      xhr.open(nameMethod, nameAction);
+      xhr.open(taskMethod, taskAction);
 
       xhr.setRequestHeader('Accept', 'application/json');
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
       //xhr.onload = () => handleResponse(xhr, false);
       xhr.onload = () => handleResponse(xhr);
-      const formData = `name=${nameField.value}&age=${ageField.value}`;
+      const formData = `task=${taskField.value}&description=${descriptionField.value}&date=${dateField.value}`;
       xhr.send(formData);
 
       return false; //prevent bubbling
     };
-
+    //GET requests
     const requestUpdate = (e, userForm) => {
       const url = userForm.querySelector('#urlField').value;
       const method = userForm.querySelector('#methodSelect').value;
@@ -94,12 +98,13 @@ const parseJSON = (xhr, content) => {
       return false; //stops bubbling, an HTML thing that might occur
     };
 
+    //intitalization of everything
     const init = () => {
-      const nameForm = document.querySelector('#nameForm');
+      const taskForm = document.querySelector('#taskForm');
       
-      const addUser = (e) => sendPost(e, nameForm);
+      const addUser = (e) => sendPost(e, taskForm);
       
-      nameForm.addEventListener('submit', addUser);
+      taskForm.addEventListener('submit', addUser);
 
       const userForm = document.querySelector('#userForm');
       
@@ -114,27 +119,43 @@ const parseJSON = (xhr, content) => {
 </head>
 <body>
   <section id="top">
-    <h3>POST Status Code Tests</h3>
-    <form id="nameForm" action="/addUser" method="post">
-      <label for="name">Name: </label>
-      <input id="nameField" type="text" name="name" />
-      <label for="age">Age: </label>
-      <input id="ageField" type="number" name="age" min="0" max="100" step="1"/>
-      <input type="submit" value="Add User" />
+    <h3>TO-DO(er)</h3>
+    <form id="taskForm" action="/addUser" method="post">
+      <label for="task">Task: </label>
+      <input id="taskField" type="text" name="task" />
+      <label for="date">Due Date:</label>
+      <input type="date" id="dateField" name="date"><br>
+      <label for="description">Description: </label> <br>
+      <textarea id="descriptionField" name="description" rows="4" cols ="50">
+        Sample text here
+      </textarea>
+      <input type="submit" value="Add Task" />
     </form>
+    <!---UPDATE NAMES TO APPROPRIATE -->
     <form id="userForm" action="/getUsers" method="get">
       <select id='urlField'>
-        <option value='/getUsers'>/getUsers</option>
+        <option value='/getUsers'>/getTasks</option>
         <option value='/notReal'>/notReal</option>
       </select>
       <select id="methodSelect">
         <option value="get">GET</option>
         <option value="head">HEAD</option>
       </select>
-      <input type="submit" value="Get User" />
+      <input type="submit" value="Get Tasks" />
     </form>
   </section>
   <section id="content">
   </section>
+  <!--WILL MAKE RESPONSIVE TO USER SIZE-->
+  <div id="taskCards">
+    <h1 style="text-align: center">TASK LIST:</h1>
+    <div class="card">
+      <div class="container">
+        <h4 id="cardTaskName">Sample</h4>
+        <p id="cardTaskDescription">Description</p>
+      </div>
+    </div>
+  </div>
+  
 </body>
 </html>

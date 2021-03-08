@@ -4,17 +4,21 @@
 // We will be working with databases in the next few weeks.
 const users = {};
 
+// GET REQUEST
 const respondJSON = (request, response, status, object) => {
   response.writeHead(status, { 'Content-Type': 'application/json' });
   response.write(JSON.stringify(object));
   response.end();
 };
 
+// HEAD REQUEST
 const respondJSONMeta = (request, response, status) => {
   response.writeHead(status, { 'Content-Type': 'application/json' });
   response.end();
 };
 
+// displays data to users, will be updated for card information display
+// get request
 const getUsers = (request, response) => {
   const responseJSON = {
     users,
@@ -23,8 +27,10 @@ const getUsers = (request, response) => {
   respondJSON(request, response, 200, responseJSON);
 };
 
+// head request for users
 const getUsersMeta = (request, response) => respondJSONMeta(request, response, 200);
 
+// handles 404 and errors or wrong urls, get request
 const notReal = (request, response) => {
   const responseJSON = {
     id: 'notFound',
@@ -32,34 +38,44 @@ const notReal = (request, response) => {
   };
   respondJSON(request, response, 404, responseJSON);
 };
+
+// head request for 404
 const notRealMeta = (request, response) => respondJSONMeta(request, response, 404);
+
+// update for task management
+// adds tasks to task list, checks for all cases will be updated to better reflect application
 const addUser = (request, response, body) => {
   const responseJSON = {
-    message: 'Name and age are both required!',
+    message: 'Task and date are both required!',
   };
 
-  if (!body.name || !body.age) {
+  // there is no need for check description?
+  // ill add it in for now but later might remove for checking since some tasks dont have one
+  if (!body.task || !body.description || !body.date) {
     responseJSON.id = 'missingParams';
     return respondJSON(request, response, 400, responseJSON);
   }
 
   let responseCode = 201; // created
 
-  if (users[body.name]) {
+  // updates task if already exists
+  if (users[body.task]) {
     responseCode = 204; // updated
-  } else {
-    users[body.name] = {};
-    users[body.name].name = body.name;
+  } else { // creates new task
+    users[body.task] = {};
+    users[body.task].task = body.task;
   }
 
-  users[body.name].age = body.age;
+  users[body.task].description = body.description;
+  users[body.task].date = body.date;
   if (responseCode === 201) {
     responseJSON.message = 'Created Successfully!';
     return respondJSON(request, response, responseCode, responseJSON);
   }
   return respondJSONMeta(request, response, responseCode);
 };
-
+/* Check this out for card creation in JS
+https://stackoverflow.com/questions/54706080/generating-dynamic-html-cards-from-a-javascript-array */
 module.exports = {
   getUsers,
   getUsersMeta,

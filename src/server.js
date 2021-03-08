@@ -6,6 +6,7 @@ const jsonHandler = require('./jsonResponses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
+//
 const handlePost = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/addUser') {
     const body = [];
@@ -31,9 +32,11 @@ const handlePost = (request, response, parsedUrl) => {
   }
 };
 
+// checks url to and uses methods accordingly for GET requests
 const handleGet = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getCSS(request, response);
+    // change this in the future to getTasks
   } else if (parsedUrl.pathname === '/getUsers') {
     jsonHandler.getUsers(request, response);
   } else if (parsedUrl.pathname === '/notReal') {
@@ -45,7 +48,9 @@ const handleGet = (request, response, parsedUrl) => {
   }
 };
 
+// checks url to and uses methods accordingly for HEAD requests
 const handleHead = (request, response, parsedUrl) => {
+  // change to getTasks
   if (parsedUrl.pathname === '/getUsers') {
     jsonHandler.getUsersMeta(request, response);
   } else if (parsedUrl.pathname === '/notReal') {
